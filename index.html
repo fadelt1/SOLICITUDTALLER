@@ -143,6 +143,17 @@
       <option value="SUMINISTRO">SUMINISTRO</option>
     </select>
 
+    <label for="ubicacion"><span>📌</span>Ubicación</label>
+    <input type="text" id="ubicacion" name="ubicacion" placeholder="Escriba su ubicación..." required />
+
+    <label for="status"><span>📊</span>Status del Móvil</label>
+    <select id="status" name="status" required>
+      <option value="">Seleccione</option>
+      <option value="Con producto">Con producto</option>
+      <option value="Con envases">Con envases</option>
+      <option value="Box vacío">Box vacío</option>
+    </select>
+
     <label for="comentario"><span>📄</span>Comentario</label>
     <textarea id="comentario" name="comentario" placeholder="Escriba un resumen breve..."></textarea>
 
@@ -171,10 +182,11 @@
         tipo: document.getElementById('tipo').value,
         destino: document.getElementById('destino').value,
         motivo: document.getElementById('motivo').value,
+        ubicacion: document.getElementById('ubicacion').value.trim(),
+        status: document.getElementById('status').value,
         comentario: document.getElementById('comentario').value.trim() || 'Sin comentario'
       };
 
-      // Armo el texto completo con saltos \n
       const texto = [
         "🛠️ *Solicitud de Avance al Taller* 🛠️",
         `👤 Chofer: ${data.chofer}`,
@@ -182,13 +194,12 @@
         `🚚 Tipo: ${data.tipo}`,
         `📍 Destino: ${data.destino}`,
         `🛠️ Motivo: ${data.motivo}`,
+        `📌 Ubicación: ${data.ubicacion}`,
+        `📊 Status del Móvil: ${data.status}`,
         `📄 Comentario: ${data.comentario}`
       ].join('\n');
 
-      // Una sola llamada para codificar TODO
-      const encoded = encodeURIComponent(texto);
-      const url = `https://api.whatsapp.com/send?text=${encoded}`;
-
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
       whatsappLink.href = url;
       modal.style.display = 'flex';
     });
