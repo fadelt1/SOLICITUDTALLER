@@ -2,254 +2,163 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recepción de Taller</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Módulo Chofer · Solicitud Taller</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ["Inter","ui-sans-serif","system-ui"] },
+          colors: {
+            brand: { 50:"#f0f6ff",100:"#dcebff",200:"#bed9ff",300:"#8fc0ff",400:"#5aa0ff",500:"#2d82ff",600:"#1a66e1",700:"#164fb0",800:"#153f88",900:"#112f66" }
+          },
+          boxShadow: { soft:"0 10px 30px rgba(0,0,0,.08)" }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
-    body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
-    .cardx{background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-    .chip{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;border:1px solid #e5e7eb;background:#f8fafc}
-    .tile{transition:transform .15s ease, box-shadow .15s ease}
-    .tile:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
-
-    /* Overlays / Modales */
-    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;align-items:flex-start;justify-content:center;overflow:auto}
-    .overlay.show{display:flex}
-    .os-box{background:#fff;border-radius:16px;margin:32px auto;max-width:920px;width:95%;box-shadow:0 10px 30px rgba(0,0,0,.2);position:relative;padding:24px}
-    .close-x{position:absolute;right:16px;top:12px;border:none;background:transparent;font-size:26px;line-height:1;cursor:pointer}
-
-    .submodal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:70;align-items:center;justify-content:center}
-    .submodal.show{display:flex}
-    .subcard{background:#fff;border-radius:12px;box-shadow:0 10px 35px rgba(0,0,0,.25);width:min(920px,95vw);max-height:80vh;overflow:auto;padding:16px}
-
-    .btn-neutral{padding:.3rem .6rem;border-radius:.5rem;border:1px solid #cbd5e1;color:#334155;background:#fff;font-size:.85rem}
-    .btn-neutral:hover{background:#f8fafc}
-    .btn-primary{padding:.5rem 1rem;border-radius:.5rem;background:#059669;color:#fff}
-    .btn-icon-danger{padding:.25rem .5rem;border-radius:.5rem;border:1px solid #fecaca;background:#fff;color:#b91c1c}
-    .btn-icon-danger:hover{background:#fff1f2}
-
-    /* Badges */
-    .state-badge{display:inline-block;font-size:.75rem;padding:.2rem .5rem;border-radius:999px;border:1px solid}
-    .state-on{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
-    .state-off{background:#f8fafc;border-color:#e5e7eb;color:#475569}
-
-    /* Timer visible */
-    .time-badge{font-variant-numeric: tabular-nums;padding:.25rem .5rem;border-radius:.375rem;background:#f1f5f9;display:inline-block;min-width:80px;text-align:center;white-space:nowrap;font-size:.85rem}
-
-    /* Radios bonitos */
-    .radio-tile{display:flex;align-items:center;gap:.5rem;border:1px solid #e5e7eb;border-radius:.75rem;padding:.5rem .75rem;cursor:pointer}
-    .radio-tile input{accent-color:#2563eb}
-
-    /* PRIORIDAD */
-    .prio{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid transparent}
-    .prio-critico{background:#fee2e2;color:#b91c1c;border-color:#fecaca}
-    .prio-alto{background:#fef9c3;color:#a16207;border-color:#fde68a}
-    .prio-bajo{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+    html,body{font-family:'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial;}
+    /* Campos táctiles */
+    .touch{min-height:52px;font-size:16px;}
+    /* Floating label simple */
+    .fg{position:relative}
+    .fg>label{position:absolute;left:14px;top:6px;font-size:12px;color:#64748b}
+    .fg>input,.fg>select,.fg>textarea{padding-top:1.35rem}
+    /* Safe area bottom para iPhone */
+    .safe-bottom{padding-bottom:calc(env(safe-area-inset-bottom) + 12px)}
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
-  <!-- HEADER -->
-  <header class="bg-[#0e2b47] text-white">
-    <div class="max-w-[1200px] mx-auto px-4 py-3 flex items-center gap-3">
-      <button class="w-9 h-9 grid place-content-center rounded-xl bg-white/10">☰</button>
-      <h1 class="text-lg font-semibold">Solicitudes derivadas a Taller</h1>
-      <div class="flex-1"></div>
-      <div class="flex items-center gap-3">
-        <span class="text-sm opacity-90">Hola, MIGUEL</span>
-        <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar" class="w-9 h-9 rounded-full">
+<body class="bg-slate-50 text-slate-900">
+
+  <!-- Header compacto -->
+  <header class="bg-brand-800 text-white">
+    <div class="mx-auto max-w-md px-4 py-3 flex items-center gap-3">
+      <div class="text-2xl">🛠️</div>
+      <div class="flex-1">
+        <h1 class="text-base font-semibold leading-tight">Solicitud al Taller</h1>
+        <p class="text-white/80 text-xs">Fadel T1 Ypané</p>
       </div>
     </div>
   </header>
 
-  <!-- LISTA -->
-  <main class="max-w-[1200px] mx-auto px-4 py-6">
-    <section class="mb-3">
-      <div class="flex items-center justify-between bg-[#0e2b47] text-white rounded-2xl px-4 py-3">
-        <div class="flex items-center gap-2">
-          <span>🧑‍🔧</span>
-          <span class="font-semibold tracking-wide">FORNECEDOR</span>
-        </div>
-        <div class="text-sm">TOTAL: <span id="total" class="font-bold">0</span></div>
+  <!-- Form -->
+  <main class="mx-auto max-w-md px-4 pt-4 pb-28">
+    <form id="f" class="space-y-3">
+      <p id="msg" class="text-sm text-slate-500"></p>
+
+      <div class="fg">
+        <label for="fh">Fecha y hora</label>
+        <input id="fh" class="w-full touch rounded-2xl border border-slate-300 bg-slate-100 px-3" type="text" readonly/>
       </div>
-    </section>
-    <section id="lista" class="space-y-4">
-      <div class="text-center text-slate-500">Cargando…</div>
-    </section>
+
+      <div class="fg">
+        <label for="chofer">Chofer</label>
+        <select id="chofer" required class="w-full touch rounded-2xl border border-slate-300 bg-white px-3">
+          <option value="">Cargando choferes…</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label for="movil">Móvil (730–759)</label>
+        <select id="movil" required class="w-full touch rounded-2xl border border-slate-300 bg-white px-3">
+          <option value="">Seleccione</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label for="tipo">Tipo</label>
+        <select id="tipo" required class="w-full touch rounded-2xl border border-slate-300 bg-white px-3">
+          <option value="">Seleccione</option>
+          <option value="CAVALO">CAVALO</option>
+          <option value="CARRETA">CARRETA</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label for="destino">Destino</label>
+        <select id="destino" required class="w-full touch rounded-2xl border border-slate-300 bg-white px-3">
+          <option value="">Seleccione</option>
+          <option>TALLER</option>
+          <option>GOMERIA</option>
+          <option>LONERIA</option>
+          <option>OTROS PROVEEDORES EXTERNOS</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label for="motivo">Motivo</label>
+        <select id="motivo" required class="w-full touch rounded-2xl border border-slate-300 bg-white px-3">
+          <option value="">Seleccione</option>
+          <option>MECANICA</option>
+          <option>ACCESORIOS</option>
+          <option>CHAPERIA</option>
+          <option>ELECTRICA</option>
+          <option>FRENO</option>
+          <option>NEUMATICOS</option>
+          <option>SERVICIOS EXTERNOS</option>
+          <option>SUMINISTRO</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label for="ubic">Ubicación</label>
+        <input id="ubic" required placeholder="Ej: CDA, RIPIO, EN RUTA, CDE" class="w-full touch rounded-2xl border border-slate-300 bg-white px-3"/>
+      </div>
+
+      <div class="fg">
+        <label for="status">Status del móvil</label>
+        <select id="status" required class="w-full touch rounded-2xl border border-slate-300 bg-white px-3">
+          <option value="">Seleccione</option>
+          <option>CON PRODUCTO</option>
+          <option>CON ENVASES</option>
+          <option>BOX VACIO</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label for="coment">Comentario</label>
+        <textarea id="coment" rows="3" placeholder="Detalle breve…" class="w-full rounded-2xl border border-slate-300 bg-white px-3 py-2"></textarea>
+      </div>
+    </form>
   </main>
 
-  <!-- ===================== MODAL OS ===================== -->
-  <div id="osOverlay" class="overlay" aria-modal="true" role="dialog">
-    <div class="os-box">
-      <button id="osClose" class="close-x" title="Cerrar">×</button>
-
-      <div class="flex items-start justify-between gap-3 mb-3">
-        <div>
-          <h2 id="titulo-os" class="text-xl font-bold">ORDEN DE SERVICIO</h2>
-          <div class="text-sm text-slate-500">Resumen y acciones</div>
-        </div>
-        <div class="text-right">
-          <div class="text-[11px] uppercase text-slate-500">Nro Solicitud</div>
-          <div id="osNroSol" class="text-lg font-extrabold">—</div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <section class="p-3 border rounded-lg bg-white">
-          <h3 class="font-semibold text-slate-700 mb-2">Detalle de la solicitud</h3>
-          <dl class="grid grid-cols-[120px_1fr] gap-y-2 text-sm">
-            <dt class="font-semibold text-slate-500">Motivo</dt><dd id="motivoTxt">—</dd>
-            <dt class="font-semibold text-slate-500">Lugar</dt><dd id="localTxt">—</dd>
-            <dt class="font-semibold text-slate-500">Chofer</dt><dd id="osChofer">—</dd>
-            <dt class="font-semibold text-slate-500">Ubicación</dt><dd id="osUbicacion">—</dd>
-            <dt class="font-semibold text-slate-500">Fecha/Hora</dt><dd id="osFechaHora">—</dd>
-            <dt class="font-semibold text-slate-500">Comentario</dt><dd><div id="osComentario" class="whitespace-pre-wrap">—</div></dd>
-            <dt class="font-semibold text-slate-500">Prioridad</dt><dd><span id="osPrioridad" class="prio">—</span></dd>
-          </dl>
-        </section>
-
-        <section class="p-3 border rounded-lg bg-white">
-          <h3 class="font-semibold text-slate-700 mb-2">Operación</h3>
-          <div class="mb-3">
-            <label for="mecanicoSel" class="block text-sm font-semibold text-slate-500 mb-1">Mecánico <span class="text-rose-600">*</span></label>
-            <select id="mecanicoSel" class="w-full rounded-lg border-slate-300">
-              <option value="">Seleccione…</option>
-              <option>ADILSON</option><option>MARCO</option><option>MARECOS</option><option>MARVIN</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label id="lblConjunto" for="conjuntoSel" class="block text-sm font-semibold text-slate-500 mb-1">Conjunto *</label>
-            <select id="conjuntoSel" class="w-full rounded-lg border-slate-300"></select>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3 mb-3 text-sm">
-            <div class="p-2 bg-slate-50 rounded border">
-              <div class="text-slate-500">Apertura</div>
-              <div id="apertura" class="font-semibold">—</div>
-            </div>
-            <div class="p-2 bg-slate-50 rounded border">
-              <div class="text-slate-500">Trabajo</div>
-              <div id="workTimer" class="font-semibold">00:00:00</div>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-2">
-            <button class="btn-neutral" onclick="abrirModalServicios()">🛠 Servicios en la OS</button>
-            <button class="btn-neutral" onclick="abrirModalInsumos()">🔧 Insumos en la OS</button>
-            <button class="btn-neutral" id="btnTransferirOs">🔁 Transferir</button>
-          </div>
-
-          <!-- Servicio activo -->
-          <div id="activeServiceBox" class="mt-3 hidden p-2 border rounded-lg bg-slate-50 text-sm">
-            <div><span class="text-slate-500">En servicio:</span> <strong id="activeServiceName">—</strong></div>
-            <div class="mt-1"><span class="text-slate-500">Tiempo:</span> <span id="activeServiceTime" class="font-semibold">00:00:00</span></div>
-          </div>
-        </section>
-      </div>
-
-      <section class="mt-4 p-3 bg-white rounded-lg border">
-        <h3 class="font-semibold text-slate-700 mb-2">Resumen de la OS</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-          <div class="p-2 rounded bg-slate-50 border"><div class="text-slate-500">Servicios agregados</div><div id="resumen-servicios" class="font-bold">0</div></div>
-          <div class="p-2 rounded bg-slate-50 border"><div class="text-slate-500">Insumos agregados</div><div id="resumen-insumos" class="font-bold">0</div></div>
-          <div class="p-2 rounded bg-slate-50 border"><div class="text-slate-500">Tiempo total de la OS</div><div id="tiempo-os" class="font-bold">00:00:00</div></div>
-          <div class="p-2 rounded bg-slate-50 border"><div class="text-slate-500">Tiempo total (servicios)</div><div id="tiempo-total" class="font-bold">00:00:00</div></div>
-        </div>
-      </section>
-
-      <div class="flex items-center justify-between mt-4">
-        <button id="btnCerrar" class="px-4 py-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50">Cerrar OS</button>
-        <button id="btnIniciar" class="btn-primary">Iniciar OS</button>
-      </div>
-
-      <!-- ===== Sub-modal: Servicios ===== -->
-      <div id="modal-servicios" class="submodal" role="dialog" aria-modal="true">
-        <div class="subcard">
-          <div class="flex items-center justify-between mb-3">
-            <div>
-              <h5 class="m-0 text-lg font-semibold">Servicios en la OS</h5>
-              <p class="text-slate-500 text-sm mt-0.5">Administrá los servicios, tiempos y técnico.</p>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-neutral" onclick="agregarServicio()">➕ Agregar servicio</button>
-              <button class="btn-neutral" onclick="cerrarModalServicios()">✕ Cerrar</button>
-            </div>
-          </div>
-
-          <div class="hidden md:grid grid-cols-[1fr_140px_120px_160px_120px] gap-2 px-2 py-2 text-xs font-semibold text-slate-500">
-            <div>Servicio</div><div>Estado</div><div>Aplica a</div><div>Tiempo</div><div class="text-right">Acciones</div>
-          </div>
-
-          <div id="servicios-container" class="mt-2"></div>
-          <div id="svc-empty" class="text-center text-slate-500 py-8 hidden">No hay servicios todavía. Usá <span class="font-semibold">“Agregar servicio”</span>.</div>
-
-          <div class="flex items-center justify-between mt-3">
-            <div class="text-sm text-slate-600">Tiempo total: <strong id="svc-total">00:00:00</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== Sub-modal: Insumos ===== -->
-      <div id="modal-insumos" class="submodal" role="dialog" aria-modal="true">
-        <div class="subcard">
-          <div class="flex items-center justify-between mb-3">
-            <div>
-              <h5 class="m-0 text-lg font-semibold">Insumos en la OS</h5>
-              <p class="text-slate-500 text-sm mt-0.5">Agregá y gestioná cantidades.</p>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-neutral" onclick="agregarInsumo()">➕ Agregar insumo</button>
-              <button class="btn-neutral" onclick="cerrarModalInsumos()">✕ Cerrar</button>
-            </div>
-          </div>
-
-          <div class="hidden md:grid grid-cols-[1fr_120px_140px_120px] gap-2 px-2 py-2 text-xs font-semibold text-slate-500">
-            <div>Insumo</div><div>Aplica a</div><div>Cantidad</div><div class="text-right">Acciones</div>
-          </div>
-
-          <div id="insumos-container" class="mt-2"></div>
-          <div id="ins-empty" class="text-center text-slate-500 py-8 hidden">Todavía no agregaste insumos.</div>
-        </div>
-      </div>
+  <!-- Footer fijo -->
+  <footer class="fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur border-t border-slate-200 shadow-soft">
+    <div class="mx-auto max-w-md px-4 py-3 safe-bottom">
+      <button id="enviar" class="w-full h-12 rounded-2xl bg-brand-600 text-white font-semibold active:scale-[.99]">📤 Enviar solicitud</button>
     </div>
-  </div>
-  <!-- ===================== FIN MODAL OS ===================== -->
+  </footer>
 
-  <!-- ===== Modal TRANSFERIR ===== -->
-  <div id="transferOverlay" class="submodal" role="dialog" aria-modal="true">
-    <div class="subcard">
-      <div class="flex items-center justify-between mb-3">
+  <!-- Bottom sheet de éxito -->
+  <div id="sheet" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/40" data-close></div>
+    <div class="absolute inset-x-0 bottom-0 max-w-md mx-auto rounded-t-3xl bg-white shadow-soft p-4 pb-6">
+      <div class="flex items-center gap-3">
+        <div class="text-3xl">✅</div>
         <div>
-          <h5 class="m-0 text-lg font-semibold">Transferir solicitud</h5>
-          <p class="text-slate-500 text-sm mt-0.5">Elegí a dónde transferir esta solicitud.</p>
+          <h3 class="font-bold">Solicitud enviada</h3>
+          <p class="text-slate-600 text-sm">Ya está todo listo.</p>
         </div>
       </div>
-
-      <div class="grid md:grid-cols-2 gap-2">
-        <label class="radio-tile">
-          <input type="radio" name="destTransfer" value="PROVEEDOR" checked>
-          <span>Proveedor (Terceros)</span>
-        </label>
-        <label class="radio-tile">
-          <input type="radio" name="destTransfer" value="COMPRAS">
-          <span>Derivado Compras</span>
-        </label>
-      </div>
-
-      <div class="flex items-center justify-end gap-2 mt-4">
-        <button class="btn-neutral" id="transferCancel">Cancelar</button>
-        <button class="btn-primary" id="transferConfirm">Confirmar</button>
-      </div>
+      <a id="wa" target="_blank" rel="noopener" class="mt-3 inline-flex items-center justify-center gap-2 w-full h-12 rounded-2xl bg-[#25D366] text-white font-semibold">📲 Compartir por WhatsApp</a>
+      <button data-close class="mt-2 w-full h-12 rounded-2xl border border-slate-300 text-slate-700">Cerrar</button>
     </div>
   </div>
 
+  <!-- Firebase + lógica -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-    import { getDatabase, ref, onValue, get, update, push, set, remove } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+    import { getDatabase, ref, get, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
-    /* ========== Firebase ========== */
-    const SOLICITUDES_CONFIG = {
+    /* Firebase */
+    const app = initializeApp({
       apiKey: "AIzaSyCHPVzlKuwPsM9JDrEQYwX2GumvunM7bso",
       authDomain: "solicitudes-b1d93.firebaseapp.com",
       databaseURL: "https://solicitudes-b1d93-default-rtdb.firebaseio.com",
@@ -258,584 +167,100 @@
       messagingSenderId: "588418332403",
       appId: "1:588418332403:web:1523983421aa238562a986",
       measurementId: "G-819DG1W1MQ"
-    };
-    const appSolicitudes = initializeApp(SOLICITUDES_CONFIG, 'solicitudes');
-    const dbSolicitudes  = getDatabase(appSolicitudes);
-
-    const SERVICIOS_CONFIG = {
-      apiKey: "AIzaSyCwVgL-mhxqeGfsO-OosTwQDCM_Ue_Ye2g",
-      authDomain: "serviciosos-8754c.firebaseapp.com",
-      projectId: "serviciosos-8754c",
-      storageBucket: "serviciosos-8754c.firebasestorage.app",
-      messagingSenderId: "694094369320",
-      appId: "1:694094369320:web:1a9a223ddafb0e860fdb1d",
-      measurementId: "G-E648183BF8"
-    };
-    const SERVICIOS_DB_URL = 'https://serviciosos-8754c-default-rtdb.firebaseio.com';
-    const appServicios = initializeApp(SERVICIOS_CONFIG, 'servicios');
-    const dbServicios  = getDatabase(appServicios, SERVICIOS_DB_URL);
-
-    const R_OS  = '/os';
-
-    /* ========== Helpers ========== */
-    const $id = (id)=> document.getElementById(id);
-    const setText = (id, v)=>{ const el=$id(id); if(el) el.textContent=v; };
-    const pad2 = (n)=> String(n).padStart(2,'0');
-    const fmtDDMMYYYY_HHMM = (dLike)=>{
-      const d=(dLike instanceof Date)?dLike:new Date(dLike||Date.now());
-      return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-    };
-    const parseAnyTs = (v)=>{
-      if(v==null) return 0; if(typeof v==='number') return v;
-      const m=(typeof v==='string')?v.match(/^(\d{2})\/(\d{2})\/(\d{4})\s(\d{2}):(\d{2})(?::(\d{2}))?$/):null;
-      if(m){ return new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5],+(m[6]||0)).getTime(); }
-      const p=Date.parse(v); return isNaN(p)?0:p;
-    };
-    const fmt=(secs)=>{ const s=Math.max(0,Math.floor(secs||0)); const h=pad2(Math.floor(s/3600)), m=pad2(Math.floor((s%3600)/60)), ss=pad2(s%60); return `${h}:${m}:${ss}`; };
-
-    const lista = document.querySelector('#lista');
-    const totalEl = document.querySelector('#total');
-
-    let currentSolId=null, currentNroOS=null, workInt=null, currentStartWorkMS=0, currentTipo=null;
-    let activeSvcKey=null, activeSvcInt=null;
-
-    // NUEVO: recordar números de unidades
-    let cavaloNum=null;   // MOVIL de la solicitud
-    let carretaNum=null;  // seleccionado en "Conjunto"
-
-    const timersByKey = {};
-    const LISTA_SERVICIOS=['CAMBIO DE ACEITE','AJUSTE DE FRENOS','REVISIÓN DE LUCES','CAMBIO DE FILTROS','ALINEACIÓN','BALANCEO'];
-    const LISTA_INSUMOS=['FOCO 24V 21W','FOCO 24V 5W','FILTRO MANN C27830 MFAR CUMMINS'];
-    const LISTA_CONJUNTO = Array.from({length:30},(_,i)=> 730 + i); // 730..759
-
-    /* PRIORIDAD helpers */
-    const prioKey = (v)=> (String(v||'').trim().toLowerCase());
-    const prioClass = (v)=>{
-      const k=prioKey(v);
-      if(k==='critico' || k==='crítico') return 'prio prio-critico';
-      if(k==='alto') return 'prio prio-alto';
-      if(k==='bajo') return 'prio prio-bajo';
-      return 'prio';
-    };
-    const paintPrioEl = (el, v)=>{
-      if(!el) return; el.className = prioClass(v); el.textContent = (v||'—').toString().toUpperCase();
-    };
-
-    /* ========== Listado principal ========== */
-    function cardHTML(item){
-      const id=item.id, mov=item.MOVIL||'—', chofer=item.CHOFER||'', ubic=item['UBICACIÓN']||'', motivo=item.MOTIVO||'', tipo=item.TIPO||'', nro=item.NRO_SOLICITUD||'—';
-      const prio=item.PRIORIDAD||''; const mecanico=item.MECANICO||'';
-      const started=!!(item.OS_INICIADA && item.OS_START_TS);
-      const startWait=item._ts?+item._ts:parseAnyTs(item['FECHA Y HORA']);
-      const startBase= started? parseAnyTs(item.OS_START_TS) : startWait;
-      const fh=item['FECHA Y HORA']||'—';
-      const label= started? 'Tiempo total' : 'Espera';
-      return `<button class="w-full text-left cardx p-4 tile" data-id="${id}">
-        <div class="flex items-start gap-3">
-          <div class="text-2xl">🚚</div>
-          <div class="flex-1">
-            <div class="flex items-baseline justify-between gap-2">
-              <div class="flex items-baseline gap-3">
-                <div class="text-lg font-extrabold">${mov}</div>
-                ${chofer?`<div class="text-slate-500 text-sm">${chofer}</div>`:''}
-              </div>
-              <div class="text-right">
-                <div class="text-slate-500 text-[11px] uppercase">Nro Solicitud</div>
-                <div class="font-bold">${nro}</div>
-              </div>
-            </div>
-            <div class="mt-2 grid grid-cols-[18px_1fr] gap-x-2 text-[13px] text-slate-600">
-              <div>📍</div><div>${ubic}</div>
-              <div>🕒</div><div>${fh}</div>
-              <div>⏱️</div><div class="font-semibold ${started?'text-slate-700':'text-rose-600'}">${label}: <span class="cron" data-start="${startBase}"></span></div>
-              ${mecanico?`<div>🧑‍🔧</div><div><span class="text-slate-700 font-medium">Mecánico:</span> ${mecanico}</div>`:''}
-            </div>
-            <div class="mt-2 flex items-center gap-2 flex-wrap">
-              ${motivo?`<span class="chip">${motivo}</span>`:''}
-              ${tipo?`<span class="chip">${tipo}</span>`:''}
-              ${prio?`<span class="${prioClass(prio)}">${String(prio).toUpperCase()}</span>`:''}
-            </div>
-            <!-- Servicio activo en la tarjeta -->
-            <div class="svc-active hidden mt-2 text-[13px] text-slate-700">🛠 <span class="svc-name">—</span> — <span class="svc-cron" data-start="0" data-base="0">00:00:00</span></div>
-          </div>
-        </div>
-      </button>`;
-    }
-    function render(arr){
-      totalEl.textContent = String(arr.length);
-      if(!arr.length){ lista.innerHTML='<div class="text-center text-slate-500">No hay solicitudes derivadas a Taller.</div>'; return; }
-      arr.sort((a,b)=>{const ta=a._ts?+a._ts:parseAnyTs(a['FECHA Y HORA']); const tb=b._ts?+b._ts:parseAnyTs(b['FECHA Y HORA']); return ta-tb;});
-      lista.innerHTML = arr.map(cardHTML).join('');
-      if(!lista._bound){
-        lista.addEventListener('click',(e)=>{ const btn=e.target.closest('button[data-id]'); if(btn) openOSModal(btn.dataset.id); });
-        lista._bound=true;
-      }
-      // Completar datos de servicio activo por tarjeta
-      arr.forEach(async (it)=>{
-        const btn = lista.querySelector(`button[data-id="${it.id}"]`); if(!btn) return;
-        const svcBox = btn.querySelector('.svc-active'); const nm=btn.querySelector('.svc-name'); const tm=btn.querySelector('.svc-cron');
-        try{
-          const svSnap = await get(ref(dbServicios, `${R_OS}/${it.id}/servicios`));
-          if(svSnap.exists()){
-            let found=null; svSnap.forEach(s=>{ const v=s.val()||{}; if(v.start_ts && !v.end_ts && !found){ found={start:v.start_ts, base: Number(v.duration_sec||0), name: v.nombre||'SERVICIO'}; } });
-            if(found){ if(nm) nm.textContent=found.name; if(tm){ tm.dataset.start=String(parseAnyTs(found.start)); tm.dataset.base=String(found.base||0); tm.textContent='00:00:00'; } if(svcBox) svcBox.classList.remove('hidden'); }
-          }
-        }catch(e){ console.error('svc fetch', e); }
-      });
-    }
-    onValue(ref(dbSolicitudes,'/'),(snap)=>{
-      const arr=[]; snap.forEach(ch=>{const v=ch.val()||{}; if((v.STATUS_DE_SOLICITUD||'')==='TALLER') arr.push({id:ch.key, ...v});});
-      render(arr);
     });
-    setInterval(()=>{
-      document.querySelectorAll('.cron').forEach(el=>{ const st=Number(el.dataset.start)||Date.now(); const diff=Math.floor((Date.now()-st)/1000); el.textContent=fmt(diff); });
-      document.querySelectorAll('.svc-cron').forEach(el=>{ const st=Number(el.dataset.start)||0; const base=Number(el.dataset.base)||0; if(st>0){ const diff=base + Math.floor((Date.now()-st)/1000); el.textContent=fmt(diff);} });
-    },1000);
+    const db = getDatabase(app);
+    const dbChoferes = getDatabase(app, "https://qlpchoferes-default-rtdb.firebaseio.com");
 
-    /* ========== Modal OS ========== */
-    const overlay=$id('osOverlay'); const btnIniciar=$id('btnIniciar'); const btnCerrar=$id('btnCerrar');
-    $id('osClose').addEventListener('click',()=>overlay.classList.remove('show'));
-    overlay.addEventListener('click',(e)=>{ if(e.target===overlay) overlay.classList.remove('show'); });
+    /* Helpers */
+    const $ = (id)=>document.getElementById(id);
+    const nowText = ()=>{
+      const d=new Date(), p=n=>String(n).padStart(2,'0');
+      return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    };
+    const setFH = ()=> $('fh').value = nowText();
 
-    function buildConjuntoOptions(selected){
-      const sel=$id('conjuntoSel'); if(!sel) return;
-      sel.innerHTML = '<option value="">Seleccione…</option>' + LISTA_CONJUNTO.map(n=>`<option value="${n}" ${String(selected)==String(n)?'selected':''}>${n}</option>`).join('');
-      sel.onchange = ()=> { carretaNum = Number(sel.value||0)||null; };
-    }
+    // Inicializar
+    setFH();
+    // Móviles 730–759
+    for(let i=730;i<=759;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; $('movil').appendChild(o); }
+    // Choferes
+    (async ()=>{
+      try{
+        const s=await get(ref(dbChoferes,'/'));
+        const sel=$('chofer');
+        if(!s.exists()){ sel.innerHTML='<option value="">Sin choferes</option>'; return; }
+        const arr=[];
+        s.forEach(n=>{ const v=n.val()||{}; const name=(v.CHOFER||'').toString().trim(); if(name) arr.push(name); });
+        arr.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+        sel.innerHTML='<option value="">Seleccione</option>';
+        arr.forEach(n=>{ const o=document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o); });
+      }catch{ $('chofer').innerHTML='<option value="">Error</option>'; }
+    })();
 
-    async function openOSModal(solId){
-      if(workInt){ clearInterval(workInt); workInt=null; }
-      if(activeSvcInt){ clearInterval(activeSvcInt); activeSvcInt=null; } activeSvcKey=null;
-      currentSolId=solId;
-      const snap=await get(ref(dbSolicitudes,'/'+solId)); if(!snap.exists()){ alert('No se encontró la solicitud.'); return; }
-      const s=snap.val()||{}; currentNroOS=s.NRO_SOLICITUD||null; currentTipo=(s.TIPO||'').toUpperCase();
+    // Sheet helpers
+    const sheet=$('sheet');
+    sheet.addEventListener('click',e=>{ if(e.target.hasAttribute('data-close')) sheet.classList.add('hidden'); });
 
-      // Números de unidades
-      cavaloNum  = Number(s.MOVIL || 0) || null;       // cavalo = movil
-      carretaNum = Number(s.CONJUNTO || 0) || null;    // si ya estaba guardado
+    // Enviar
+    $('enviar').addEventListener('click', async ()=>{
+      const f = document.getElementById('f');
+      if(!f.checkValidity()){ f.reportValidity(); return; }
 
-      setText('titulo-os', `ORDEN DE SERVICIO – Solicitud ${s.NRO_SOLICITUD||'—'}`);
-      setText('osChofer', s.CHOFER||'—'); setText('osUbicacion', s['UBICACIÓN']||'—');
-      setText('osFechaHora', s['FECHA Y HORA']||'—'); setText('osNroSol', s.NRO_SOLICITUD||'—');
-      setText('motivoTxt', s.MOTIVO||'—'); setText('localTxt', s.DESTINO||'—');
-      setText('osComentario', s.COMENTARIO||s.Comentario||'—');
-      paintPrioEl($id('osPrioridad'), s.PRIORIDAD||'—');
-      setText('apertura', s.OS_START_TS||'—');
-      const sel=$id('mecanicoSel'); if(sel) sel.value=s.MECANICO||'';
+      const btn=$('enviar');
+      btn.disabled=true; btn.classList.add('opacity-60','cursor-wait');
 
-      const lbl=$id('lblConjunto');
-      if(lbl){
-        if(currentTipo==='CAVALO') lbl.textContent='Carreta del conjunto *';
-        else if(currentTipo==='CARRETA') lbl.textContent='Cavalo del conjunto *';
-        else lbl.textContent='Conjunto *';
+      const data = {
+        "DESTINO": $('destino').value,
+        "FECHA Y HORA": $('fh').value,
+        "MOTIVO": $('motivo').value,
+        "MOVIL": $('movil').value,
+        "NRO_SOLICITUD": Math.floor(100000 + Math.random()*900000),
+        "STATUS_DEL_MOVIL": $('status').value,
+        "STATUS_DE_SOLICITUD": "PENDIENTE",
+        "TIPO": $('tipo').value,
+        "UBICACIÓN": $('ubic').value.trim(),
+        "CHOFER": $('chofer').value.trim(),
+        "COMENTARIO": ($('coment').value||"").trim(),
+        "_ts": serverTimestamp()
+      };
+
+      try{
+        const nuevo = push(ref(db,'/'));
+        await set(nuevo, data);
+
+        // WhatsApp
+        const texto = [
+          "🛠️ *Solicitud de Avance al Taller*",
+          `🕒 ${data["FECHA Y HORA"]}`,
+          `👤 ${data["CHOFER"]}`,
+          `🚚 Móvil: ${data["MOVIL"]} · ${data["TIPO"]}`,
+          `📍 ${data["DESTINO"]}`,
+          `🛠️ ${data["MOTIVO"]}`,
+          `📌 ${data["UBICACIÓN"]}`,
+          `🚦 ${data["STATUS_DEL_MOVIL"]}`,
+          `🧾 ${data["NRO_SOLICITUD"]}`,
+          data["COMENTARIO"]?`📝 ${data["COMENTARIO"]}`:""
+        ].filter(Boolean).join('\n');
+        $('wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
+
+        /* >>> LIMPIEZA AUTOMÁTICA (inmediata) <<< */
+        f.reset();
+        setFH();               // repone la hora actual
+        window.scrollTo({top:0,behavior:'smooth'});
+
+        // Mensaje de éxito y sheet
+        const msg=$('msg');
+        msg.textContent='Solicitud creada correctamente.';
+        msg.className='text-sm text-emerald-600';
+        sheet.classList.remove('hidden');
+      }catch(e){
+        const msg=$('msg');
+        msg.textContent='Ocurrió un error al guardar.';
+        msg.className='text-sm text-rose-600';
+      }finally{
+        btn.disabled=false; btn.classList.remove('opacity-60','cursor-wait');
       }
-      buildConjuntoOptions(s.CONJUNTO||'');
-
-      const started=!!s.OS_INICIADA && !!s.OS_START_TS;
-      if(btnIniciar){ btnIniciar.disabled=started; btnIniciar.textContent=started?'OS INICIADA':'INICIAR OS'; }
-      currentStartWorkMS=started?parseAnyTs(s.OS_START_TS):0;
-
-      const workTimerEl=$id('workTimer');
-      if(workTimerEl) workTimerEl.textContent=started?fmt(Math.floor((Date.now()-currentStartWorkMS)/1000)):'00:00:00';
-      setText('tiempo-os', started ? fmt(Math.floor((Date.now()-currentStartWorkMS)/1000)) : '00:00:00');
-
-      if(started && workTimerEl){
-        workInt=setInterval(()=>{
-          const sec = Math.floor((Date.now()-currentStartWorkMS)/1000);
-          workTimerEl.textContent = fmt(sec);
-          setText('tiempo-os', fmt(sec));
-        },1000);
-      }
-
-      $id('servicios-container').innerHTML=''; $id('insumos-container').innerHTML='';
-      setText('resumen-servicios','0'); setText('resumen-insumos','0');
-      setText('tiempo-total','00:00:00'); setText('svc-total','00:00:00'); setText('tiempo-os','00:00:00');
-      for(const k in timersByKey){ if(timersByKey[k].h) clearInterval(timersByKey[k].h); delete timersByKey[k]; }
-
-      await rebuildServiciosInsumos(solId);
-
-      // Detectar servicio activo al abrir
-      const svSnap=await get(ref(dbServicios, `${R_OS}/${solId}/servicios`));
-      if(svSnap.exists()){
-        svSnap.forEach(sv=>{ const v=sv.val()||{}; if(v.start_ts && !v.end_ts && !activeSvcKey){ activeSvcKey=sv.key; showActiveService(v.nombre||'SERVICIO'); } });
-      }
-
-      overlay.classList.add('show');
-    }
-
-    if(btnIniciar) btnIniciar.addEventListener('click', async ()=>{
-      if(!currentSolId) return;
-      const mecanico=$id('mecanicoSel')?.value?.trim()||'';
-      if(!mecanico){ alert('Seleccione el mecánico.'); return; }
-      const conjuntoSel=$id('conjuntoSel')?.value?.trim()||'';
-      if(!conjuntoSel){ alert('Seleccione el conjunto.'); return; }
-
-      // fijar números
-      carretaNum = Number(conjuntoSel);
-      cavaloNum  = Number(cavaloNum||0) || null;
-
-      const now=Date.now();
-      await update(ref(dbSolicitudes,'/'+currentSolId), {
-        OS_INICIADA:true,
-        OS_START_TS: fmtDDMMYYYY_HHMM(now),
-        MECANICO: mecanico,
-        CONJUNTO: String(carretaNum),
-        CAVALO_NUM: cavaloNum,
-        CARRETA_NUM: carretaNum
-      });
-      btnIniciar.disabled=true; btnIniciar.textContent='OS INICIADA';
-      currentStartWorkMS=now;
-      const workTimerEl=$id('workTimer');
-      if(workInt) clearInterval(workInt);
-      if(workTimerEl) workInt=setInterval(()=>{
-        const sec = Math.floor((Date.now()-currentStartWorkMS)/1000);
-        workTimerEl.textContent = fmt(sec);
-        setText('tiempo-os', fmt(sec));
-      },1000);
     });
-
-    /* Sub-modales open/close */
-    window.abrirModalServicios = ()=> $id('modal-servicios').classList.add('show');
-    window.cerrarModalServicios = ()=> $id('modal-servicios').classList.remove('show');
-    window.abrirModalInsumos   = ()=> $id('modal-insumos').classList.add('show');
-    window.cerrarModalInsumos  = ()=> $id('modal-insumos').classList.remove('show');
-
-    /* Recaps y tiempos */
-    function recap(){
-      setText('resumen-servicios', String(document.querySelectorAll('#servicios-container .svc-row').length));
-      setText('resumen-insumos', String(document.querySelectorAll('#insumos-container .ins-row').length));
-    }
-    function totalTime(){
-      const totalSec = Object.keys(timersByKey).reduce((a,k)=> a + (timersByKey[k].seg||0), 0);
-      setText('tiempo-total', fmt(totalSec));
-      setText('svc-total', fmt(totalSec));
-      recap();
-    }
-
-    function showActiveService(name){
-      const box=$id('activeServiceBox'); const nm=$id('activeServiceName'); const tm=$id('activeServiceTime');
-      if(!box||!nm||!tm) return;
-      nm.textContent=name||'—';
-      box.classList.remove('hidden');
-      if(activeSvcInt) clearInterval(activeSvcInt);
-      activeSvcInt=setInterval(()=>{
-        const t= timersByKey[activeSvcKey];
-        tm.textContent = fmt(t?.seg||0);
-      },1000);
-    }
-    function hideActiveService(){
-      const box=$id('activeServiceBox'); if(box) box.classList.add('hidden');
-      if(activeSvcInt){ clearInterval(activeSvcInt); activeSvcInt=null; }
-      activeSvcKey=null;
-    }
-
-    /* ===== Servicios ===== */
-    function crearFilaServicio(key, data){
-      const nombre = data?.nombre || 'SERVICIO';
-      const serviceNumber = data?.service_number || 0;
-      const aplica = (data?.aplica||'').toUpperCase();
-
-      const row = document.createElement('div');
-      row.dataset.key = key;
-      row.className = "svc-row grid grid-cols-[1fr_140px_120px_160px_120px] gap-2 items-center rounded-lg border px-3 py-2 bg-white";
-
-      const setS = new Set(LISTA_SERVICIOS); if(!setS.has(nombre)) setS.add(nombre);
-      const opts = [...setS].map(s => `<option${s===nombre?' selected':''}>${s}</option>`).join('');
-
-      const base = Number(data?.duration_sec || 0);
-      const running = !!(data?.start_ts && !data?.end_ts);
-      timersByKey[key] = { seg: base, h: null };
-
-      row.innerHTML = `
-        <div class="flex items-center gap-2">
-          <span class="hidden md:inline text-slate-400 text-xs">#${serviceNumber}</span>
-          <select class="flex-1 rounded-md border-slate-300" onchange="updateServiceName(this, '${key}')">
-            ${opts}
-          </select>
-        </div>
-        <div class="md:text-center">
-          <span id="state-${key}" class="state-badge ${running?'state-on':'state-off'}">${running ? 'En curso' : 'Detenido'}</span>
-        </div>
-        <div class="flex items-center justify-start md:justify-center">
-          <select id="aplica-${key}" class="rounded-md border-slate-300 text-sm">
-            <option value="">—</option>
-            <option value="CAVALO" ${aplica==='CAVALO'?'selected':''}>Cavalo</option>
-            <option value="CARRETA" ${aplica==='CARRETA'?'selected':''}>Carreta</option>
-          </select>
-        </div>
-        <div class="flex items-center justify-start md:justify-center">
-          <span id="tm-${key}" class="time-badge">00:00:00</span>
-        </div>
-        <div class="flex md:justify-end gap-2">
-          <button id="start-${key}" class="btn-neutral" onclick="startTimer('${key}', this)">Iniciar</button>
-          <button id="stop-${key}"  class="btn-neutral" onclick="stopTimer('${key}', this)" disabled>Detener</button>
-          <button class="btn-icon-danger" title="Eliminar" onclick="deleteServiceRow(this, '${key}')">×</button>
-        </div>
-      `;
-
-      $id('servicios-container').appendChild(row);
-      $id('svc-empty')?.classList.add('hidden');
-
-      const sp    = $id(`tm-${key}`);
-      const stBtn = $id(`start-${key}`);
-      const enBtn = $id(`stop-${key}`);
-      const badge = $id(`state-${key}`);
-      const paint = ()=>{ if (sp) sp.textContent = fmt(timersByKey[key].seg); };
-
-      if (running){
-        timersByKey[key].seg = base + Math.max(0, Math.floor((Date.now()-parseAnyTs(data.start_ts))/1000));
-        paint();
-        if (stBtn) stBtn.disabled = true;
-        if (enBtn) enBtn.disabled = false;
-        if (badge){ badge.textContent='En curso'; badge.classList.remove('state-off'); badge.classList.add('state-on'); }
-        timersByKey[key].h = setInterval(()=>{ timersByKey[key].seg++; paint(); totalTime(); },1000);
-      } else { paint(); }
-
-      totalTime(); recap();
-    }
-
-    window.agregarServicio = async function(nombre, seg){
-      nombre = nombre || ''; seg = seg || 0; if(!currentSolId){ alert('Abrí una solicitud'); return; }
-      const svSnap = await get(ref(dbServicios, `${R_OS}/${currentSolId}/servicios`));
-      const serviceNumber = svSnap.exists()? (Object.keys(svSnap.val()||{}).length+1) : 1;
-      const mecanico=$id('mecanicoSel')?.value || null;
-
-      const newRef=push(ref(dbServicios, `${R_OS}/${currentSolId}/servicios`)); const key=newRef.key;
-      await set(newRef,{
-        solicitud_id: currentSolId,
-        nro_os: currentNroOS||null,
-        service_number: serviceNumber,
-        nombre: nombre||'SERVICIO',
-        tecnico: mecanico,
-        aplica: '',
-        conjunto: String(carretaNum||''),
-        cavalo_num: cavaloNum,     // referencia
-        carreta_num: carretaNum,   // referencia
-        unit_number: null,         // se fija al iniciar según aplica
-        created_ts: fmtDDMMYYYY_HHMM(Date.now()),
-        start_ts: null, end_ts: null, duration_sec: 0
-      });
-      crearFilaServicio(key, {nombre, service_number: serviceNumber, duration_sec: seg, aplica: '', conjunto:String(carretaNum||'')});
-    };
-    window.updateServiceName = async function(sel,key){ if(!key) return; await update(ref(dbServicios, `${R_OS}/${currentSolId}/servicios/${key}`), { nombre: sel.value||'SERVICIO' }); };
-
-    // Iniciar servicio
-    window.startTimer = async function(key,btn){
-      const t=timersByKey[key]; if(!t) return;
-      const aplicaSel=$id(`aplica-${key}`); 
-      const aplica=(aplicaSel?.value||'').toUpperCase().trim();
-      if(!aplica){ alert('Seleccioná si el servicio aplica a Cavalo o Carreta.'); return; }
-
-      const unit_number = (aplica==='CAVALO') ? (cavaloNum||null) : (carretaNum||null);
-      if(!unit_number){ alert('No se pudo determinar el número de unidad. Verificá conjunto/cavalo.'); return; }
-
-      btn.disabled=true; btn.nextElementSibling.disabled=false;
-      await update(ref(dbServicios, `${R_OS}/${currentSolId}/servicios/${key}`), { 
-        aplica, 
-        conjunto: String(carretaNum||''), 
-        unit_number, 
-        start_ts: fmtDDMMYYYY_HHMM(Date.now()), 
-        end_ts: null 
-      });
-
-      // UI modal
-      const sp=$id(`tm-${key}`), badge=$id(`state-${key}`);
-      if(t.h) clearInterval(t.h);
-      if(badge){ badge.textContent='En curso'; badge.classList.remove('state-off'); badge.classList.add('state-on'); }
-      t.h=setInterval(()=>{ t.seg=(t.seg||0)+1; if(sp) sp.textContent=fmt(t.seg); totalTime(); },1000);
-
-      // Mostrar servicio activo en Operación
-      activeSvcKey=key;
-      const nameSel = btn.closest('.svc-row').querySelector('select');
-      showActiveService(nameSel?.value||'SERVICIO');
-
-      // Actualizar tarjeta inmediatamente
-      const card=document.querySelector(`button[data-id="${currentSolId}"]`);
-      if(card){
-        const box=card.querySelector('.svc-active');
-        const nm=card.querySelector('.svc-active .svc-name');
-        const tm=card.querySelector('.svc-active .svc-cron');
-        if(box) box.classList.remove('hidden');
-        if(nm) nm.textContent = (nameSel?.value||'SERVICIO');
-        if(tm){
-          tm.dataset.start = String(Date.now());
-          tm.dataset.base  = String(t.seg||0);
-          tm.textContent   = '00:00:00';
-        }
-      }
-    };
-
-    // Detener servicio
-    window.stopTimer = async function(key,btn){
-      const t=timersByKey[key]; if(!t) return;
-
-      if(t.h){ clearInterval(t.h); t.h=null; }
-      btn.disabled=true;
-      const startBtn=$id(`start-${key}`); if(startBtn) startBtn.disabled=false;
-      await update(ref(dbServicios, `${R_OS}/${currentSolId}/servicios/${key}`), { 
-        end_ts: fmtDDMMYYYY_HHMM(Date.now()), 
-        duration_sec: t.seg||0 
-      });
-      const badge=$id(`state-${key}`); 
-      if(badge){ badge.textContent='Detenido'; badge.classList.remove('state-on'); badge.classList.add('state-off'); }
-
-      if(activeSvcKey===key){ hideActiveService(); }
-      totalTime();
-
-      // Reset en tarjeta
-      const card=document.querySelector(`button[data-id="${currentSolId}"]`);
-      if(card){
-        const box=card.querySelector('.svc-active');
-        const tm=card.querySelector('.svc-active .svc-cron');
-        if(box) box.classList.add('hidden');
-        if(tm){
-          tm.dataset.start = "0";
-          tm.dataset.base  = "0";
-          tm.textContent   = "00:00:00";
-        }
-      }
-    };
-    window.deleteServiceRow = async function(el,key){
-      const row=el.closest('.grid');
-      if(key){ await remove(ref(dbServicios, `${R_OS}/${currentSolId}/servicios/${key}`)); }
-      const t=timersByKey[key]; if(t&&t.h) clearInterval(t.h);
-      if(activeSvcKey===key){ hideActiveService(); }
-      delete timersByKey[key];
-      if(row) row.remove();
-      if(!document.querySelector('#servicios-container .grid')) $id('svc-empty')?.classList.remove('hidden');
-      totalTime(); recap();
-    };
-
-    /* ===== Insumos ===== */
-    function crearFilaInsumo(key, data){
-      const nombre = data?.nombre || 'INSUMO';
-      const cantidad = Number(data?.cantidad||1);
-      const aplica = (data?.aplica||'').toUpperCase();
-
-      const row=document.createElement('div');
-      row.dataset.key=key;
-      row.className="ins-row grid grid-cols-[1fr_120px_140px_120px] gap-2 items-center rounded-lg border px-3 py-2 bg-white";
-
-      const setI=new Set(LISTA_INSUMOS); if(!setI.has(nombre)) setI.add(nombre);
-      const opts=[...setI].map(s=>`<option${s===nombre?' selected':''}>${s}</option>`).join('');
-
-      row.innerHTML = `
-        <div class="flex items-center gap-2">
-          <select class="flex-1 rounded-md border-slate-300" onchange="updateInsumoNombre(this)">${opts}</select>
-        </div>
-        <div>
-          <select class="rounded-md border-slate-300 text-sm" onchange="updateInsumoAplica(this)">
-            <option value="" ${aplica===''?'selected':''}>—</option>
-            <option value="CAVALO" ${aplica==='CAVALO'?'selected':''}>Cavalo</option>
-            <option value="CARRETA" ${aplica==='CARRETA'?'selected':''}>Carreta</option>
-          </select>
-        </div>
-        <div>
-          <input type="number" min="1" class="w-full rounded-md border-slate-300 px-2 py-1" value="${cantidad}" onchange="updateInsumoCantidad(this)">
-        </div>
-        <div class="flex justify-end gap-2">
-          <button class="btn-icon-danger" title="Eliminar" onclick="deleteInsumoRow(this)">×</button>
-        </div>
-      `;
-      $id('insumos-container').appendChild(row);
-      $id('ins-empty')?.classList.add('hidden');
-      recap();
-    }
-
-    async function rebuildServiciosInsumos(solId){
-      const svcsSnap = await get(ref(dbServicios, `${R_OS}/${solId}/servicios`));
-      if(svcsSnap.exists()){ svcsSnap.forEach(ch=> crearFilaServicio(ch.key, ch.val()||{}) ); }
-      const insSnap  = await get(ref(dbServicios, `${R_OS}/${solId}/insumos`));
-      if(insSnap.exists()) { insSnap.forEach(ch=> crearFilaInsumo(ch.key, ch.val()||{}) ); }
-      totalTime(); recap();
-    }
-
-    // CRUD Insumos
-    window.agregarInsumo = async function(nombre, cantidad){
-      nombre=nombre||''; cantidad=Number(cantidad||1);
-      if(!currentSolId){ alert('Abrí una solicitud'); return; }
-      const newRef=push(ref(dbServicios, `${R_OS}/${currentSolId}/insumos`)); const key=newRef.key;
-      await set(newRef,{ 
-        solicitud_id: currentSolId, nro_os: currentNroOS||null, 
-        nombre: nombre||'INSUMO', aplica:'', cantidad,
-        conjunto: String(carretaNum||''),
-        cavalo_num: cavaloNum, carreta_num: carretaNum,
-        unit_number: null,
-        created_ts: fmtDDMMYYYY_HHMM(Date.now()) 
-      });
-      crearFilaInsumo(key, {nombre, cantidad, aplica:''});
-    };
-    window.updateInsumoNombre = async function(sel){
-      const key=sel.closest('.ins-row').dataset.key;
-      await update(ref(dbServicios, `${R_OS}/${currentSolId}/insumos/${key}`), { nombre: sel.value||'INSUMO' });
-    };
-    window.updateInsumoAplica = async function(sel){
-      const key=sel.closest('.ins-row').dataset.key;
-      const val=(sel.value||'').toUpperCase().trim();
-      const unit_number = (val==='CAVALO') ? (cavaloNum||null) : (carretaNum||null);
-      await update(ref(dbServicios, `${R_OS}/${currentSolId}/insumos/${key}`), { aplica: val, unit_number, conjunto: String(carretaNum||'') });
-    };
-    window.updateInsumoCantidad = async function(inp){
-      const key=inp.closest('.ins-row').dataset.key;
-      const val=Number(inp.value)||1;
-      await update(ref(dbServicios, `${R_OS}/${currentSolId}/insumos/${key}`), { cantidad: val });
-      recap();
-    };
-    window.deleteInsumoRow = async function(btn){
-      const row=btn.closest('.ins-row');
-      const key=row.dataset.key;
-      await remove(ref(dbServicios, `${R_OS}/${currentSolId}/insumos/${key}`));
-      row.remove();
-      if(!document.querySelector('#insumos-container .ins-row')) $id('ins-empty')?.classList.remove('hidden');
-      recap();
-    };
-
-    /* Cerrar OS */
-    if(btnCerrar) btnCerrar.addEventListener('click', async ()=>{
-      if(!currentSolId) return;
-      // Valida insumos
-      const insSnap = await get(ref(dbServicios, `${R_OS}/${currentSolId}/insumos`));
-      if(insSnap.exists()){
-        let falta=false; insSnap.forEach(s=>{ const v=s.val()||{}; const a=(v.aplica||'').trim(); if(a==='') falta=true; });
-        if(falta){ alert('Hay insumos sin “Aplica a” (Cavalo/Carreta). Completá antes de cerrar.'); return; }
-      }
-      // Valida servicios
-      const svcsSnap=await get(ref(dbServicios, `${R_OS}/${currentSolId}/servicios`));
-      if(svcsSnap.exists()){
-        let falta=false; svcsSnap.forEach(s=>{ const v=s.val()||{}; const a=(v.aplica||'').trim(); if(a==='') falta=true; });
-        if(falta){ alert('Hay servicios sin “Aplica a” (Cavalo/Carreta). Completá antes de cerrar.'); return; }
-        const updates={}; svcsSnap.forEach(s=>{ const v=s.val()||{}; if(v.start_ts && !v.end_ts){ updates[`${s.key}/end_ts`]=fmtDDMMYYYY_HHMM(Date.now()); } });
-        if(Object.keys(updates).length) await update(ref(dbServicios, `${R_OS}/${currentSolId}/servicios`), updates);
-      }
-      if(!confirm('¿Cerrar la OS?')) return;
-      const now=Date.now();
-      if(workInt){ clearInterval(workInt); workInt=null; }
-      for(const k in timersByKey){ if(timersByKey[k].h){ clearInterval(timersByKey[k].h); timersByKey[k].h=null; } }
-      await update(ref(dbSolicitudes, `/${currentSolId}`), { OS_CERRADA:true, OS_END_TS: fmtDDMMYYYY_HHMM(now), STATUS_DE_SOLICITUD: 'OS CERRADA' });
-      overlay.classList.remove('show');
-      alert('OS cerrada correctamente.');
-    });
-
-    /* ===== Transferir ===== */
-    const transferOverlay=$id('transferOverlay');
-    const openTransfer=()=> transferOverlay.classList.add('show');
-    const closeTransfer=()=> transferOverlay.classList.remove('show');
-    document.getElementById('btnTransferirOs').addEventListener('click', ()=>{
-      if(!currentSolId){ alert('Abrí una OS primero.'); return;}
-      openTransfer();
-    });
-    const cancelBtn=$id('transferCancel'); if(cancelBtn) cancelBtn.addEventListener('click', closeTransfer);
-    async function confirmTransfer(){
-      if(!currentSolId) return;
-      const sel = document.querySelector('input[name="destTransfer"]:checked')?.value || 'PROVEEDOR';
-      const updates={}; if(sel==='PROVEEDOR') updates.STATUS_DE_SOLICITUD='TERCEROS'; if(sel==='COMPRAS') updates.STATUS_DE_SOLICITUD='COMPRAS';
-      try{ await update(ref(dbSolicitudes, `/${currentSolId}`), updates); closeTransfer(); overlay.classList.remove('show'); alert('Solicitud transferida.'); }
-      catch(e){ console.error(e); alert('No se pudo transferir.'); }
-    }
-    const confirmBtn=$id('transferConfirm'); if(confirmBtn) confirmBtn.addEventListener('click', confirmTransfer);
   </script>
 </body>
 </html>
-
-
-
